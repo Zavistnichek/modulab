@@ -6,11 +6,20 @@ BMI Calculator with input validation and professional error handling
 import argparse
 import logging
 import sys
+import os
 from typing import Optional
+from fastapi import FastAPI, HTTPException
+import uvicorn
+from dotenv import load_dotenv
 
 # Logger setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Загружаем переменные окружения
+load_dotenv()
+
+app = FastAPI()
 
 
 class BMICalculator:
@@ -72,6 +81,42 @@ class BMICalculator:
         return True
 
 
+@app.get("/bmi")
+def calculate_bmi(weight: float, height_cm: float):
+    """
+    Calculate BMI via HTTP GET request.
+
+    Args:
+        weight (float): Weight in kilograms.
+        height_cm (float): Height in centimeters.
+
+    Returns:
+        dict: BMI value and category.
+    """
+    try:
+        bmi = BMICalculator.calculate(weight, height_cm)
+        if bmi is None:
+            raise HTTPException(status_code=400, detail="Invalid input parameters")
+
+        category = "Unknown"
+        if bmi < 18.5:
+            category = "Underweight"
+        elif 18.5 <= bmi < 25:
+            category = "Normal weight"
+        elif 25 <= bmi < 30:
+            category = "Overweight"
+        else:
+            category = "Obesity"
+
+        return {"bmi": bmi, "category": category}
+
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve)) from ve
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error") from e
+
+
 def get_args() -> argparse.Namespace:
     """Gets arguments via command line or interactive input"""
     parser = argparse.ArgumentParser(
@@ -80,7 +125,6 @@ def get_args() -> argparse.Namespace:
     )
 
     parser.add_argument("-w", "--weight", type=float, help="Weight in kilograms")
-
     parser.add_argument("-H", "--height", type=float, help="Height in centimeters")
 
     args = parser.parse_args()
@@ -94,9 +138,8 @@ def get_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Main program logic"""
+    """Main program logic for CLI usage"""
     args = get_args()
-
     bmi = BMICalculator.calculate(args.weight, args.height)
 
     if bmi is not None:
@@ -110,9 +153,14 @@ def main() -> None:
         sys.exit(1)
 
 
-if __name__ == "__main__":
-    try:
+def cli_main():
+    """Entry point for CLI usage."""
+    if len(sys.argv) > 1:
         main()
-    except KeyboardInterrupt:
-        logger.error("\nOperation cancelled by user")
-        sys.exit(1)
+    else:
+        port = int(os.getenv("PORT", 5000))
+        uvicorn.run(app, host="0.0.0.0", port=port)
+
+
+if __name__ == "__main__":
+    cli_main()

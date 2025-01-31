@@ -47,9 +47,3 @@ jobs:
             CI/CD Status: ${{ job.status }}
             Repository: ${{ github.repository }}
             Commit: ${{ github.sha }}
-
-      - name: Deploy to Heroku
-        if: github.ref == 'refs/heads/master'
-        run: |
-          heroku login -i
-          git push heroku master

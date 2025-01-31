@@ -17,3 +17,6 @@ pyflakes==3.2.0
 pytest==8.3.4
 pytest-cov==4.1.0
 typing_extensions==4.12.2
+fastapi
+uvicorn
+python-dotenv
