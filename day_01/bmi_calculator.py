@@ -7,10 +7,13 @@ import argparse
 import logging
 import sys
 import os
+import uvicorn
+import redis
+
 from typing import Optional
 from fastapi import FastAPI, HTTPException
-import uvicorn
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +22,9 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 app = FastAPI()
+
+redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+redis_client = redis.Redis.from_url(redis_url)
 
 
 class BMICalculator:
@@ -168,3 +174,24 @@ def cli_main():
 
 if __name__ == "__main__":
     cli_main()
+
+
+class BMIRequest(BaseModel):
+    weight: float
+    height_cm: float
+
+
+@app.post("/bmi")
+def calculate_bmi_post(request: BMIRequest):
+    cache_key = f"bmi:{request.weight}:{request.height_cm}"
+    cached_result = redis_client.get(cache_key)
+
+    if cached_result:
+        return {"bmi": float(cached_result), "source": "cache"}
+    bmi = BMICalculator.calculate(request.weight, request.height_cm)
+
+    if bmi is None:
+        raise HTTPException(status_code=400, detail="Invalid input parameters")
+    redis_client.set(cache_key, bmi, ex=300)
+
+    return {"bmi": bmi, "source": "calculated"}
