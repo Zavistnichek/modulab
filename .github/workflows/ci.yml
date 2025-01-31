@@ -13,13 +13,21 @@ jobs:
         with:
           python-version: "3.12.3"
 
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest tests/
+        run: pytest tests/ --maxfail=1 --disable-warnings -v
 
       - name: Run flake8
         run: flake8 .
@@ -39,20 +47,12 @@ jobs:
             Commit: ${{ github.sha }}
 
       - name: Deploy to Heroku
-        if: github.ref == 'refs/heads/master'  # Используем master
+        if: github.ref == 'refs/heads/master'
         run: |
           heroku login -i
           git push heroku master
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Run coverage
         run: |
           pip install pytest-cov
-          pytest --cov=day_01 tests/
+          pytest --cov=day_01 --maxfail=1 --disable-warnings -v
