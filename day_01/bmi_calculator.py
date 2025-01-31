@@ -188,9 +188,12 @@ async def calculate_bmi_post(request: BMIRequest):
 
     if cached_result:
         return {"bmi": float(cached_result), "source": "cache"}
+
     bmi = BMICalculator.calculate(request.weight, request.height_cm)
+
     if isinstance(bmi, Awaitable):
         bmi = await bmi
+
     if bmi is None:
         raise HTTPException(status_code=400, detail="Invalid input parameters")
 
