@@ -30,6 +30,7 @@ jobs:
         run: |
           pip install pytest-cov
           pytest --cov=day_01 tests/
+          pip install httpx
 
       - name: Run flake8
         run: flake8 .
