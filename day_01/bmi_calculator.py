@@ -10,7 +10,7 @@ import os
 import uvicorn
 import redis
 
-from typing import Optional, Awaitable
+from typing import Optional
 from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
 from pydantic import BaseModel
@@ -190,9 +190,6 @@ async def calculate_bmi_post(request: BMIRequest):
         return {"bmi": float(cached_result.decode("utf-8")), "source": "cache"}
 
     bmi = BMICalculator.calculate(request.weight, request.height_cm)
-
-    if isinstance(bmi, Awaitable):
-        bmi = await bmi
 
     if bmi is None:
         raise HTTPException(status_code=400, detail="Invalid input parameters")
