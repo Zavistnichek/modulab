@@ -5,7 +5,7 @@ import os
 import uvicorn
 
 from typing import Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from dotenv import load_dotenv
 
 
@@ -76,8 +76,9 @@ class BMICalculator:
         return True
 
 
-@app.get("/")
-def read_root():
+@app.get("/", methods=["GET", "HEAD"])
+def read_root(response: Response):
+    response.headers["Content-Length"] = "0"
     return {"message": "Welcome to the BMI Calculator!"}
 
 
