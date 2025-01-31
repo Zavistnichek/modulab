@@ -12,11 +12,10 @@ from fastapi import FastAPI, HTTPException
 import uvicorn
 from dotenv import load_dotenv
 
-# Logger setup
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Загружаем переменные окружения
 load_dotenv()
 
 app = FastAPI()
