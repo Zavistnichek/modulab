@@ -187,7 +187,7 @@ async def calculate_bmi_post(request: BMIRequest):
     cached_result = redis_client.get(cache_key)
 
     if cached_result:
-        return {"bmi": float(cached_result), "source": "cache"}
+        return {"bmi": float(cached_result.decode("utf-8")), "source": "cache"}
 
     bmi = BMICalculator.calculate(request.weight, request.height_cm)
 
