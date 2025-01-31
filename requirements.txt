@@ -20,4 +20,3 @@ typing_extensions==4.12.2
 fastapi
 uvicorn
 python-dotenv
-redis
