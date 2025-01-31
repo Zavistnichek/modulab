@@ -186,7 +186,7 @@ async def calculate_bmi_post(request: BMIRequest):
     cache_key = f"bmi:{request.weight}:{request.height_cm}"
     cached_result = redis_client.get(cache_key)
 
-    if cached_result:
+    if cached_result is not None:
         return {"bmi": float(cached_result.decode("utf-8")), "source": "cache"}
 
     bmi = BMICalculator.calculate(request.weight, request.height_cm)
@@ -194,6 +194,6 @@ async def calculate_bmi_post(request: BMIRequest):
     if bmi is None:
         raise HTTPException(status_code=400, detail="Invalid input parameters")
 
-    redis_client.set(cache_key, bmi, ex=300)
+    redis_client.set(cache_key, str(bmi), ex=300)
 
     return {"bmi": bmi, "source": "calculated"}
