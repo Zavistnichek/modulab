@@ -82,6 +82,11 @@ def read_root(response: Response):
     return {"message": "Welcome to the BMI Calculator!"}
 
 
+@app.route("/", methods=["GET", "HEAD"])
+async def root():
+    return {"message": "Hello World"}
+
+
 @app.get("/bmi")
 def calculate_bmi(weight: float, height_cm: float):
     """
