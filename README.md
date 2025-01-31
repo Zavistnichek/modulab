@@ -12,7 +12,7 @@ Each day includes **2-3 mini-projects** to reinforce skills.
 2. Choose a day, go to the corresponding folder, and start coding!
 
 ## 📌 Progress:
-> Day01: https://daily-python-journey.onrender.com/docs#/default/calculate_bmi_bmi_get
+> Day01: https://bmi-calculator-mspx.onrender.com/docs#/default/calculate_bmi_bmi_get
 
 > Day02:
 
