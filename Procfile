@@ -1,1 +1,0 @@
-web: python day_01/bmi_calculator.py
