@@ -34,11 +34,22 @@ class BMICalculator:
             float: BMI value or None in case of error
         """
         try:
+            if not isinstance(weight, (float, int)) or not isinstance(
+                height_cm, (float, int)
+            ):
+                raise ValueError(
+                    "Both weight and height must be numbers (int or float)."
+                )
+
             if not cls._validate_input(weight, height_cm):
                 return None
 
             height_m = height_cm / 100  # Convert height to meters
             return round(weight / (height_m**2), 1)
+
+        except ValueError as ve:
+            logger.error(f"Input error: {str(ve)}")
+            raise
         except Exception as e:
             logger.error(f"Calculation error: {str(e)}")
             return None
