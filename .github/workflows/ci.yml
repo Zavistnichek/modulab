@@ -26,11 +26,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: List repository files
+        run: ls -R
+
       - name: List files in the tests directory
         run: ls -R tests/
 
-      - name: Run tests
-        run: pytest . --maxfail=1 --disable-warnings -v
+      - name: Run tests with specific pattern
+        run: pytest tests/test_*.py --maxfail=1 --disable-warnings -v
 
       - name: Run flake8
         run: flake8 .
