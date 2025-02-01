@@ -2,6 +2,24 @@ import secrets
 import string
 import re
 
+from fastapi import FastAPI, HTTPException
+
+app = FastAPI()
+
+
+@app.get("/generate-password")
+def generate_password_api(
+    length: int = 12,
+    use_uppercase: bool = True,
+    use_digits: bool = True,
+    use_special: bool = True,
+):
+    try:
+        password = generate_password(length, use_uppercase, use_digits, use_special)
+        return {"password": password}
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve)) from ve
+
 
 def generate_password(
     length: int = 12,
@@ -35,12 +53,6 @@ def generate_password(
     return "".join(secrets.choice(characters) for _ in range(length))
 
 
-password = generate_password(
-    length=16, use_uppercase=True, use_digits=True, use_special=True
-)
-print(password)
-
-
 def is_password_strong(password: str, min_length: int = 8) -> bool:
     """
     Checks if the password meets complexity requirements.
@@ -68,6 +80,3 @@ def is_password_strong(password: str, min_length: int = 8) -> bool:
         return False
 
     return True
-
-
-print(is_password_strong(password))
