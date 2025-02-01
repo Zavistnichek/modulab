@@ -1,10 +1,18 @@
 import secrets
 import string
 import re
+import logging
 
 from fastapi import FastAPI, HTTPException
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 app = FastAPI()
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @app.get("/generate-password")
