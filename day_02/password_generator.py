@@ -2,6 +2,8 @@ import secrets
 import string
 import re
 import logging
+import os
+import uvicorn
 
 from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
@@ -88,3 +90,8 @@ def is_password_strong(password: str, min_length: int = 8) -> bool:
         return False
 
     return True
+
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
