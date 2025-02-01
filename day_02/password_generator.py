@@ -93,5 +93,5 @@ def is_password_strong(password: str, min_length: int = 8) -> bool:
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))
+    port = int(os.getenv("PORT", 5000))
     uvicorn.run(app, host="0.0.0.0", port=port)
