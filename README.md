@@ -9,7 +9,7 @@ Each day includes **2-3 mini-projects** to reinforce skills.
    git clone https://github.com/your_username/daily-python-journey.git  
    cd daily-python-journey  
    ```  
-2. Choose a day, go to the corresponding folder, and start coding!
+2. Run setup.sh, choose a day, go to the corresponding folder, and start coding!
 
 ## 📌 Progress:
 > Day01: bmi-calculator
