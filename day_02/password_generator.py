@@ -1,13 +1,27 @@
-from fastapi import FastAPI, HTTPException
 import string
 import secrets
+import logging
+import uvicorn
+import os
+
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def generate_password(length: int = 12) -> str:
     characters = string.ascii_letters + string.digits + string.punctuation
     return "".join(secrets.choice(characters) for _ in range(length))
+
+
+@app.get("/generate-password")
+def get_password(length: int = 12):
+    if length < 8 or length > 64:
+        return {"error": "Password length must be between 8 and 64 characters."}
+    return {"password": generate_password(length)}
 
 
 def is_password_secure(password: str) -> bool:
@@ -20,6 +34,7 @@ def is_password_secure(password: str) -> bool:
 
 @app.get("/generate-password")
 def generate_secure_password(length: int = 12):
+    logger.info(f"Generating password of length {length}")
     if length < 8:
         raise HTTPException(
             status_code=400, detail="Password length must be at least 8 characters."
@@ -29,3 +44,8 @@ def generate_secure_password(length: int = 12):
         password = generate_password(length)
         if is_password_secure(password):
             return {"password": password}
+
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))  # Render автоматически назначает порт
+    uvicorn.run(app, host="0.0.0.0", port=port)
