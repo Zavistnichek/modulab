@@ -1,19 +1,26 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.12.3"
+          python-version: '3.12'
 
-      - name: Cache dependencies
+      - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
@@ -30,14 +37,26 @@ jobs:
         run: |
           pip install pytest-cov
           pip install httpx
-          pytest --cov=day_01 tests/
-          pytest --cov=day_02 tests/
+          pytest --cov=day_01 --cov=day_02 tests/
 
       - name: Run flake8
-        run: flake8 .
+        run: |
+          pip install flake8
+          flake8 .
 
       - name: Run mypy
-        run: mypy .
+        run: |
+          pip install mypy
+          mypy .
+
+      - name: Create Jira Task (Optional)
+        env:
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_SERVER: ${{ secrets.JIRA_SERVER }}
+        continue-on-error: true  # Ensures that if Jira fails, the CI does not fail
+        run: |
+          python scripts/create_jira_task.py || echo "Failed to create Jira task, but continuing workflow"
 
       - name: Notify Telegram
         if: always()

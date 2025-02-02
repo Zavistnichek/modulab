@@ -14,7 +14,9 @@ Each day includes **2-3 mini-projects** to reinforce skills.
 ## 📌 Progress:
 > Day01: bmi-calculator
 
-> Day02:
+> Day02: ...
+
+> Day03: password_generator
 
 🎯 **Goal**:  
 By the end of 30 days, you'll have:
