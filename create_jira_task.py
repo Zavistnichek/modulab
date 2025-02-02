@@ -3,6 +3,7 @@ import os
 import re
 import sys
 import logging
+import subprocess
 
 
 logging.basicConfig(
@@ -24,11 +25,13 @@ def create_jira_task():
 
     try:
         jira = JIRA(server=jira_server, basic_auth=(jira_email, jira_api_token))
-        commit_message = os.popen("git log -1 --pretty=%B").read().strip()
+        commit_message = get_commit_message()
         issue_key = extract_jira_issue_key(commit_message)
 
-        if issue_key is None:
-            raise ValueError("Jira issue key not found in commit message")
+        if issue_key:
+            logger.info(f"Jira issue key found: {issue_key}")
+        else:
+            logger.warning("No Jira issue key found in commit message")
 
         issue = jira.create_issue(
             project="DPJ",
@@ -41,6 +44,18 @@ def create_jira_task():
         return issue.key
     except Exception as e:
         logger.error(f"Error creating Jira task: {e}")
+        sys.exit(1)
+
+
+def get_commit_message():
+    """Функция для получения сообщения последнего коммита"""
+    try:
+        commit_message = subprocess.check_output(
+            ["git", "log", "-1", "--pretty=%B"], text=True
+        ).strip()
+        return commit_message
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Error getting commit message: {e}")
         sys.exit(1)
 
 
