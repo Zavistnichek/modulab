@@ -76,6 +76,11 @@ class BMICalculator:
         return True
 
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the BMI Calculator API"}
+
+
 @app.get("/bmi")
 def calculate_bmi(weight: float, height_cm: float):
     """
