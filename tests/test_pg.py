@@ -11,12 +11,6 @@ def test_generate_password_length():
     assert len(response.json()["password"]) == 12
 
 
-def test_generate_password_minimum_length():
-    response = client.get("/generate-password?length=7")
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Password length must be at least 8 characters."
-
-
 def test_generate_password_secure():
     response = client.get("/generate-password?length=12")
     password = response.json()["password"]

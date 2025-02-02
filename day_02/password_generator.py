@@ -17,13 +17,6 @@ def generate_password(length: int = 12) -> str:
     return "".join(secrets.choice(characters) for _ in range(length))
 
 
-@app.get("/generate-password")
-def get_password(length: int = 12):
-    if length < 8 or length > 64:
-        return {"error": "Password length must be between 8 and 64 characters."}
-    return {"password": generate_password(length)}
-
-
 def is_password_secure(password: str) -> bool:
     has_upper = any(c.isupper() for c in password)
     has_lower = any(c.islower() for c in password)
@@ -35,9 +28,10 @@ def is_password_secure(password: str) -> bool:
 @app.get("/generate-password")
 def generate_secure_password(length: int = 12):
     logger.info(f"Generating password of length {length}")
-    if length < 8:
+    if length < 8 or length > 64:
         raise HTTPException(
-            status_code=400, detail="Password length must be at least 8 characters."
+            status_code=400,
+            detail="Password length must be between 8 and 64 characters.",
         )
 
     while True:
@@ -47,5 +41,5 @@ def generate_secure_password(length: int = 12):
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 5000))  # Render автоматически назначает порт
+    port = int(os.getenv("PORT", 5000))  # Render automatically assigns port
     uvicorn.run(app, host="0.0.0.0", port=port)
