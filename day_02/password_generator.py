@@ -92,6 +92,11 @@ def is_password_strong(password: str, min_length: int = 8) -> bool:
     return True
 
 
+@app.get("/")
+def root():
+    return {"message": "Password Generator API is running! Use /generate-password"}
+
+
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))
     uvicorn.run(app, host="0.0.0.0", port=port)
