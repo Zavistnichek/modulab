@@ -54,9 +54,9 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_SERVER: ${{ secrets.JIRA_SERVER }}
-        continue-on-error: true  # Ensures that if Jira fails, the CI does not fail
+        continue-on-error: true
         run: |
-          python scripts/create_jira_task.py || echo "Failed to create Jira task, but continuing workflow"
+          python create_jira_task.py || echo "Failed to create Jira task, but continuing workflow"
 
       - name: Notify Telegram
         if: always()
