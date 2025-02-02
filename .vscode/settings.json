@@ -8,9 +8,6 @@
             "source.organizeImports": true
         }
     },
-    "docker.explorerRefreshInterval": 3000,
-    "docker.dockerPath": "docker",
-    "docker.enableWsl": true,
     "terminal.integrated.env.linux": {
         "PYTHONPATH": "/home/zavistnichek/daily-python-journey"
     }

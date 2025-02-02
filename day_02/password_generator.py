@@ -25,6 +25,11 @@ def is_password_secure(password: str) -> bool:
     return has_upper and has_lower and has_digit and has_special
 
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the password generator API!"}
+
+
 @app.get("/generate-password")
 def generate_secure_password(length: int = 12):
     logger.info(f"Generating password of length {length}")
@@ -41,5 +46,5 @@ def generate_secure_password(length: int = 12):
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 5000))  # Render automatically assigns port
+    port = int(os.getenv("PORT", 5000))
     uvicorn.run(app, host="0.0.0.0", port=port)
