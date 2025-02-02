@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-data_list = ["string"]
+data_list = ["string", 0, 1, True, False, None, (tuple,), (set), {"key", "value"}]
 
 MAX_LIST_SIZE = 100
 
@@ -29,6 +29,11 @@ def remove_item(item: str):
         raise HTTPException(status_code=404, detail=f"Item {item!r} not found.")
     data_list.remove(item)
     return {"message": f"Item '{item!r}' removed successfully."}
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the basic_list_operations API!"}
 
 
 @app.get("/search")
