@@ -2,13 +2,14 @@ from fastapi import FastAPI, HTTPException
 import uvicorn
 import os
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-data_list = ["string", 0, 1, True, False, None, (tuple,), (set), {"key", "value"}]
+data_list = []
 
 MAX_LIST_SIZE = 100
 
@@ -20,7 +21,7 @@ def add_item(item: str):
             status_code=400, detail="List is full. Cannot add more items."
         )
     data_list.append(item)
-    return {"message": f"Item {item!r} added successfully."}
+    return {"message": f"Item {json.dumps(item)} added successfully."}
 
 
 @app.delete("/remove")
@@ -28,7 +29,7 @@ def remove_item(item: str):
     if item not in data_list:
         raise HTTPException(status_code=404, detail=f"Item {item!r} not found.")
     data_list.remove(item)
-    return {"message": f"Item '{item!r}' removed successfully."}
+    return {"message": f"Item {json.dumps(item)} removed successfully."}
 
 
 @app.get("/")
