@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-data_list = []
+data_list: list[str] = []
 
 MAX_LIST_SIZE = 100
 
