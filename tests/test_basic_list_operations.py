@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from day_03.basic_list_operations import app, data_list
+from services.basic_list_operations.main import app, data_list
 
 client = TestClient(app)
 

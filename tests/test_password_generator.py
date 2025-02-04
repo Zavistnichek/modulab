@@ -1,6 +1,6 @@
 import string
 from fastapi.testclient import TestClient
-from day_02.password_generator import app
+from services.password_generator.main import app
 
 client = TestClient(app)
 

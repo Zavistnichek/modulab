@@ -48,7 +48,7 @@ def create_jira_task():
 
 
 def get_commit_message():
-    """Функция для получения сообщения последнего коммита"""
+    """Function to get the last commit message"""
     try:
         commit_message = subprocess.check_output(
             ["git", "log", "-1", "--pretty=%B"], text=True
@@ -60,7 +60,7 @@ def get_commit_message():
 
 
 def extract_jira_issue_key(commit_message):
-    """Функция для извлечения ключа задачи из сообщения коммита."""
+    """Function to extract the issue key from the commit message."""
     match = re.search(r"\b[A-Z]{2,}-\d+\b", commit_message)
     if match:
         return match.group(0)

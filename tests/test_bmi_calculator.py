@@ -1,7 +1,7 @@
 import pytest
 import sys
 from fastapi.testclient import TestClient
-from day_01.bmi_calculator import BMICalculator, app, cli_main
+from services.bmi_calculator.main import BMICalculator, app, cli_main
 
 client = TestClient(app)
 

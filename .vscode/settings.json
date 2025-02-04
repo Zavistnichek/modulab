@@ -8,7 +8,5 @@
             "source.organizeImports": true
         }
     },
-    "terminal.integrated.env.linux": {
-        "PYTHONPATH": "/home/zavistnichek/daily-python-journey"
-    }
+    "python.linting.pylintEnabled": true
 }
