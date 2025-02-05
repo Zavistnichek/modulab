@@ -21,4 +21,3 @@ fastapi
 uvicorn
 python-dotenv
 jira
-gtts

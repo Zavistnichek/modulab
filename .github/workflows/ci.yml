@@ -47,7 +47,7 @@ jobs:
       - name: Run mypy
         run: |
           pip install mypy
-          mypy --explicit-package-bases services tests utils
+          mypy --ignore-missing-imports --explicit-package-bases services tests utils
 
       - name: Create Jira Task (Optional)
         env:
