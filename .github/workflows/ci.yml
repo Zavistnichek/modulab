@@ -68,10 +68,16 @@ jobs:
             CI/CD Status: ${{ job.status }}
             Repository: ${{ github.repository }}
             Commit: ${{ github.sha }}
+
       - name: Add GitLab as remote
         run: git remote add gitlab https://gitlab.com/Zavistnichek/daily-python-journey.git
 
+      - name: Pull from GitLab before pushing
+        run: git pull gitlab master --rebase
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+
       - name: Push to GitLab
-        run: git push https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/Zavistnichek/daily-python-journey.git master
+        run: git push gitlab master
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
