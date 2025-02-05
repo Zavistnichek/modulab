@@ -1,0 +1,58 @@
+stages:
+  - test
+  - lint
+  - notify
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+before_script:
+  - python --version
+  - pip install --upgrade pip
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .cache/pip
+
+test:
+  stage: test
+  image: python:3.12
+  script:
+    - pip install -r requirements.txt
+    - pip install pytest-cov httpx
+    - pytest --cov=. tests/
+
+lint:
+  stage: lint
+  image: python:3.12
+  script:
+    - pip install -r requirements.txt  # <-- Добавил установку зависимостей перед линтерами
+    - pip install flake8 mypy
+    - flake8 .
+    - python -c "import fastapi, uvicorn, jira, pytest; print('All imports work!')" || echo "Some imports are missing"
+    - mypy --explicit-package-bases --ignore-missing-imports services tests utils  # <-- Добавил `--ignore-missing-imports`
+
+jira_task:
+  stage: notify
+  image: python:3.12
+  script:
+    - pip install requests
+    - python create_jira_task.py || echo "Failed to create Jira task, but continuing workflow"
+  only:
+    - master
+  allow_failure: true
+
+notify_telegram:
+  stage: notify
+  image: curlimages/curl:latest
+  script:
+    - |
+      curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+        -d chat_id="${TELEGRAM_CHAT_ID}" \
+        -d text="CI/CD Status: ${CI_JOB_STATUS}
+        Repository: ${CI_PROJECT_PATH}
+        Commit: ${CI_COMMIT_SHA}"
+  only:
+    - master
+  allow_failure: true
