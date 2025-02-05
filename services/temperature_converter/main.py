@@ -33,6 +33,12 @@ def convert_temperature_general(value: float, from_scale: str, to_scale: str) ->
     return value
 
 
+@app.get("/")
+def read_root():
+    logger.info("Root endpoint accessed")
+    return {"message": "Welcome to the temperature_converter API!"}
+
+
 @app.get("/convert")
 def convert_temperature(value: float, from_scale: str, to_scale: str):
     logger.info(f"Received request for conversion: {value} {from_scale} -> {to_scale}")
