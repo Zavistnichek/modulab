@@ -1,28 +1,17 @@
-# 🚀 30-Day Python Journey
-
-This repository contains a **30-day Python challenge**.  
-Each day includes **2-3 mini-projects** to reinforce skills.
-
-## 🔥 How to use:  
-1. Clone the repository:  
-   ```bash  
-   git clone https://github.com/your_username/daily-python-journey.git  
-   cd daily-python-journey  
-   ```  
-2. Run setup.sh, choose a day, go to the corresponding folder, and start coding!
+# 30-Day Python Journey
 
 ## 📌 Progress:
-> Day01: bmi-calculator
 
-> Day02: ...
+> day_01: bmi-calculator
 
-> Day03: password_generator
+> day_02: ...
 
-🎯 **Goal**:  
-By the end of 30 days, you'll have:
+> day_03: password_generator
 
-✔ 50+ working projects for your portfolio  
-✔ Confident Python skills for real-world tasks  
-✔ Experience with documentation and debugging  
+> day_04: ...
 
-**Important:** All projects are written without autocompletion!
+> day_05: basic_list_operations
+
+> day_06: temperature_converter
+
+> 
