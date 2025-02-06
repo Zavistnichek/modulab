@@ -26,7 +26,7 @@ lang_form = Form(
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to text-to-speech API!"}
+    return {"message": "Welcome to the text-to-speech API!"}
 
 
 @app.post("/text-to-speech")
