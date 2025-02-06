@@ -37,6 +37,7 @@ jobs:
         run: |
           pip install pytest-cov
           pip install httpx
+          pip install gtts
           pytest --cov=. tests/
 
       - name: Run flake8
