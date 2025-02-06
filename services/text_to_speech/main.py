@@ -7,7 +7,7 @@ import logging
 
 app = FastAPI()
 
-AUDIO_DIR = "audio_files"
+AUDIO_DIR = "/services/text_to_speech/audio_files"
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
