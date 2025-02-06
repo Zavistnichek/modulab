@@ -38,6 +38,7 @@ jobs:
           pip install pytest-cov
           pip install httpx
           pip install gtts
+          pip install fastapi[all]
           pytest --cov=. tests/
 
       - name: Run flake8
