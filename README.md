@@ -15,3 +15,7 @@
 > day_06: temperature_converter
 
 > day_07: text_to_speech
+
+> day_08: ...
+
+> day_09: word_counter
