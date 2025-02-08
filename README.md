@@ -16,6 +16,6 @@
 
 > day_07: text_to_speech
 
-> day_08: ...
+> day_08: csv_tool
 
 > day_09: word_counter
