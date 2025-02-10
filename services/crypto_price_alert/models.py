@@ -1,10 +1,11 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class PriceAlertRequest(BaseModel):
     crypto: str
-    above: float = None
-    below: float = None
+    above: Optional[float] = None
+    below: Optional[float] = None
     user: str = "default"
 
 

@@ -5,11 +5,13 @@ from contextlib import asynccontextmanager
 from .models import PriceAlertRequest, PriceResponse
 from .utils import get_crypto_price, format_crypto_price
 import asyncio
+from typing import Dict, Any
 
 scheduler = BackgroundScheduler()
 scheduler.start()
 price_alerts = {}
 lock = Lock()
+price_alerts: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
 
 def check_price_alerts():
