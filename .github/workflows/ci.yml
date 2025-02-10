@@ -58,7 +58,7 @@ jobs:
           JIRA_SERVER: ${{ secrets.JIRA_SERVER }}
         continue-on-error: true
         run: |
-          python create_jira_task.py || echo "Failed to create Jira task, but continuing workflow"
+          python utils/create_jira_task.py || echo "Failed to create Jira task, but continuing workflow"
 
       - name: Notify Telegram
         if: always()
