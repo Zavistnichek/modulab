@@ -19,3 +19,7 @@
 > day_08: csv_tool
 
 > day_09: word_counter
+
+> day_10: ...
+
+> day_11: crypto_price_alert
