@@ -5,18 +5,18 @@ import sys
 import logging
 import subprocess
 
-
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def create_jira_task():
     jira_server = os.environ.get("JIRA_SERVER")
     jira_email = os.environ.get("JIRA_EMAIL")
     jira_api_token = os.environ.get("JIRA_API_TOKEN")
-
     if not jira_server or not jira_email or not jira_api_token:
         logger.error(
             "Missing Jira credentials (JIRA_SERVER, JIRA_EMAIL, JIRA_API_TOKEN)"
@@ -39,16 +39,16 @@ def create_jira_task():
             description=f"Commit message: {commit_message}",
             issuetype={"name": "Task"},
         )
-
         logger.info(f"Successfully created Jira task: {issue.key}")
         return issue.key
+
     except Exception as e:
         logger.error(f"Error creating Jira task: {e}")
         sys.exit(1)
 
 
 def get_commit_message():
-    """Function to get the last commit message"""
+    """Function to get the latest commit message."""
     try:
         commit_message = subprocess.check_output(
             ["git", "log", "-1", "--pretty=%B"], text=True
@@ -60,7 +60,7 @@ def get_commit_message():
 
 
 def extract_jira_issue_key(commit_message):
-    """Function to extract the issue key from the commit message."""
+    """Function to extract Jira issue key from commit message."""
     match = re.search(r"\b[A-Z]{2,}-\d+\b", commit_message)
     if match:
         return match.group(0)
