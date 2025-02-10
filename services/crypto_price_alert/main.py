@@ -9,7 +9,6 @@ from typing import Dict, Any
 
 scheduler = BackgroundScheduler()
 scheduler.start()
-price_alerts = {}
 lock = Lock()
 price_alerts: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
