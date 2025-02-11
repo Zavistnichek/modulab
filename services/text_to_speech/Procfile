@@ -1,1 +1,0 @@
-web: uvicorn text_to_speech.main:app --host 0.0.0.0 --port 5000

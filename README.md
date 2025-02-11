@@ -23,3 +23,7 @@
 > day_10: ...
 
 > day_11: crypto_price_alert
+
+> day_12: ...
+
+> day_13: qr_code_generator
