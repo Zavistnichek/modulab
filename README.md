@@ -27,3 +27,7 @@
 > day_12: ...
 
 > day_13: qr_code_generator
+
+> day_14: ...
+
+> day_15: language_translator
