@@ -31,3 +31,5 @@
 > day_14: ...
 
 > day_15: language_translator
+
+> day_16: earthquake_alert
