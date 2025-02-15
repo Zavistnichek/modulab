@@ -111,7 +111,6 @@ def test_get_earthquake_by_id():
     Test for retrieving an earthquake by ID.
     Verifies that the endpoint returns the correct earthquake when queried by ID.
     """
-    # Create and add a test earthquake to the database
     earthquake = create_earthquake(
         id="test_id_1",
         magnitude=5.5,

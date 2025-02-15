@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, cast
 from datetime import datetime, timedelta
 import uuid
 import httpx
@@ -41,7 +41,7 @@ def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     dlat = lat2 - lat1
     a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
     c = 2 * asin(sqrt(a))
-    r = 6371
+    r = 6371  # Earth's radius in kilometers
     return c * r
 
 
@@ -133,6 +133,7 @@ async def create_earthquake(earthquake: Earthquake):
     return earthquake
 
 
+# Define Query objects as module-level variables
 min_magnitude_query = Query(None, ge=0, le=10)
 max_magnitude_query = Query(None, ge=0, le=10)
 latitude_query = Query(None, ge=-90, le=90)
@@ -178,6 +179,7 @@ async def get_recent_earthquakes(days: Optional[int] = days_query):
     """
     Returns earthquakes from the last N days (default: 30 days).
     """
+    days = cast(int, days or 30)
     start_time = datetime.utcnow() - timedelta(days=days)
     return [eq for eq in db if eq.time >= start_time]
 
@@ -186,7 +188,7 @@ async def get_recent_earthquakes(days: Optional[int] = days_query):
 async def get_earthquake(earthquake_id: str):
     """
     Returns data for a specific earthquake by ID.
-    Returns None if the earthquake is not found.
+    Raises a 404 error if the earthquake is not found.
     """
     for eq in db:
         if eq.id == earthquake_id:
