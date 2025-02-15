@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timedelta
@@ -28,10 +28,14 @@ class Earthquake(BaseModel):
 
 
 db: List[Earthquake] = []
-active_connections = []
+active_connections: List[WebSocket] = []
 
 
 def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """
+    Calculates the distance between two points on the Earth's surface in kilometers.
+    Uses the Haversine formula.
+    """
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
     dlon = lon2 - lon1
     dlat = lat2 - lat1
@@ -43,6 +47,9 @@ def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
 
 @app.websocket("/ws/earthquake-alerts")
 async def websocket_endpoint(websocket: WebSocket):
+    """
+    WebSocket endpoint for sending real-time earthquake alerts.
+    """
     await websocket.accept()
     active_connections.append(websocket)
     try:
@@ -52,17 +59,30 @@ async def websocket_endpoint(websocket: WebSocket):
         active_connections.remove(websocket)
 
 
-async def fetch_usgs_earthquakes():
+async def fetch_usgs_earthquakes() -> List[dict]:
+    """
+    Fetches earthquake data from the USGS API for the last hour.
+    Returns a list of GeoJSON features.
+    """
     url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
     async with httpx.AsyncClient() as client:
-        response = await client.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            return data.get("features", [])
-        return []
+        try:
+            response = await client.get(url)
+            if response.status_code == 200:
+                data = response.json()
+                return data.get("features", [])
+            else:
+                print(f"Failed to fetch data: {response.status_code}")
+                return []
+        except Exception as e:
+            print(f"Error fetching data from USGS API: {e}")
+            return []
 
 
-def convert_usgs_to_earthquake(feature) -> Earthquake:
+def convert_usgs_to_earthquake(feature: dict) -> Earthquake:
+    """
+    Converts a USGS GeoJSON feature into an Earthquake object.
+    """
     properties = feature["properties"]
     geometry = feature["geometry"]
     return Earthquake(
@@ -77,15 +97,22 @@ def convert_usgs_to_earthquake(feature) -> Earthquake:
 
 
 async def update_earthquake_data():
+    """
+    Periodically fetches earthquake data from the USGS API and updates the database.
+    Sends notifications to active WebSocket connections.
+    """
     while True:
         print("Fetching earthquake data from USGS...")
         features = await fetch_usgs_earthquakes()
         for feature in features:
-            earthquake = convert_usgs_to_earthquake(feature)
-            if all(eq.id != earthquake.id for eq in db):
-                db.append(earthquake)
-                for connection in active_connections:
-                    await connection.send_json(earthquake.dict())
+            try:
+                earthquake = convert_usgs_to_earthquake(feature)
+                if all(eq.id != earthquake.id for eq in db):  # Check for duplicates
+                    db.append(earthquake)
+                    for connection in active_connections:
+                        await connection.send_json(earthquake.dict())
+            except KeyError as e:
+                print(f"Invalid data from USGS API: Missing key {e}")
         await asyncio.sleep(3600)
 
 
@@ -96,6 +123,9 @@ async def startup_event():
 
 @app.post("/earthquakes", response_model=Earthquake)
 async def create_earthquake(earthquake: Earthquake):
+    """
+    Creates a new earthquake record and broadcasts it via WebSocket.
+    """
     earthquake.id = str(uuid.uuid4())
     db.append(earthquake)
     for connection in active_connections:
@@ -103,16 +133,27 @@ async def create_earthquake(earthquake: Earthquake):
     return earthquake
 
 
+min_magnitude_query = Query(None, ge=0, le=10)
+max_magnitude_query = Query(None, ge=0, le=10)
+latitude_query = Query(None, ge=-90, le=90)
+longitude_query = Query(None, ge=-180, le=180)
+radius_km_query = Query(None, ge=0)
+days_query = Query(30, gt=0)
+
+
 @app.get("/earthquakes", response_model=List[Earthquake])
 async def get_earthquakes(
-    min_magnitude: Optional[float] = None,
-    max_magnitude: Optional[float] = None,
+    min_magnitude: Optional[float] = min_magnitude_query,
+    max_magnitude: Optional[float] = max_magnitude_query,
     start_time: Optional[datetime] = None,
     end_time: Optional[datetime] = None,
-    latitude: Optional[float] = None,
-    longitude: Optional[float] = None,
-    radius_km: Optional[float] = None,
+    latitude: Optional[float] = latitude_query,
+    longitude: Optional[float] = longitude_query,
+    radius_km: Optional[float] = radius_km_query,
 ):
+    """
+    Returns a filtered list of earthquakes based on query parameters.
+    """
     filtered = db.copy()
     if min_magnitude is not None:
         filtered = [eq for eq in filtered if eq.magnitude >= min_magnitude]
@@ -122,7 +163,7 @@ async def get_earthquakes(
         filtered = [eq for eq in filtered if eq.time >= start_time]
     if end_time is not None:
         filtered = [eq for eq in filtered if eq.time <= end_time]
-    if all([latitude, longitude, radius_km]):
+    if latitude is not None and longitude is not None and radius_km is not None:
         filtered = [
             eq
             for eq in filtered
@@ -133,18 +174,24 @@ async def get_earthquakes(
 
 
 @app.get("/earthquakes/recent", response_model=List[Earthquake])
-async def get_recent_earthquakes(days: Optional[int] = None):
-    days = days if days is not None else 30
+async def get_recent_earthquakes(days: Optional[int] = days_query):
+    """
+    Returns earthquakes from the last N days (default: 30 days).
+    """
     start_time = datetime.utcnow() - timedelta(days=days)
     return [eq for eq in db if eq.time >= start_time]
 
 
 @app.get("/earthquakes/{earthquake_id}", response_model=Optional[Earthquake])
 async def get_earthquake(earthquake_id: str):
+    """
+    Returns data for a specific earthquake by ID.
+    Returns None if the earthquake is not found.
+    """
     for eq in db:
         if eq.id == earthquake_id:
             return eq
-    return None
+    raise HTTPException(status_code=404, detail="Earthquake not found")
 
 
 if __name__ == "__main__":
