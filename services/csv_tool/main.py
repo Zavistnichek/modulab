@@ -7,18 +7,21 @@ import io
 app = FastAPI()
 
 
-default_file = File(None)
+default_file = File(...)
 
 
 @app.post("/upload-csv/")
 async def upload_csv(file: UploadFile = default_file):
-    if file is None or file.filename is None or not file.filename.endswith(".csv"):
+    """
+    Endpoint for uploading a CSV file and returning its contents as JSON.
+    """
+    if not file.filename or not file.filename.endswith(".csv"):
         raise HTTPException(
             status_code=400, detail="The file must be a CSV with a valid filename"
         )
 
-    contents = await file.read()
     try:
+        contents = await file.read()
         df = pd.read_csv(io.StringIO(contents.decode("utf-8")))
     except Exception as e:
         raise HTTPException(
@@ -30,6 +33,9 @@ async def upload_csv(file: UploadFile = default_file):
 
 @app.get("/")
 async def read_root() -> dict:
+    """
+    Root endpoint to welcome users to the API.
+    """
     return {"message": "Welcome to the csv_tool API!"}
 
 
