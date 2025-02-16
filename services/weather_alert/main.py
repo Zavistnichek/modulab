@@ -44,8 +44,8 @@ def fetch_weather_data(location: str):
         )
 
     params = {
-        "latitude": location_coords[location]["latitude"],
-        "longitude": location_coords[location]["longitude"],
+        "latitude": str(location_coords[location]["latitude"]),
+        "longitude": str(location_coords[location]["longitude"]),
         "hourly": "temperature_2m,relative_humidity_2m,windspeed_10m",
         "timezone": "auto",
     }
