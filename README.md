@@ -35,3 +35,7 @@
 > day_16: earthquake_alert
 
 > day_17: weather_alert
+
+> day_18: ...
+
+> day_19: text_reverse
