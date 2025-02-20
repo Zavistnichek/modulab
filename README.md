@@ -1,4 +1,4 @@
-# 30-Day Python Journey
+# ModuLab
 
 ## 📌 Progress:
 
