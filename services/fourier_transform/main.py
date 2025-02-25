@@ -2,7 +2,7 @@ from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse, FileResponse
 import ctypes
 import numpy as np
-import soundfile as sf
+import soundfile as sf  # type: ignore
 import uvicorn
 from typing import List
 
@@ -17,7 +17,7 @@ lib.calculate_spectrum.argtypes = [
 ]
 
 # Global audio data and precomputed spectrums
-audio_data: np.ndarray = None
+audio_data: np.ndarray = np.array([])
 sample_rate: int = 0
 spectrums: List[List[float]] = []
 FRAME_SIZE = 1024
@@ -25,7 +25,7 @@ FRAME_SIZE = 1024
 
 @app.on_event("startup")
 async def precompute_spectrums():
-    global spectrums, sample_rate
+    global audio_data, sample_rate, spectrums
     audio_data, sample_rate = sf.read("Aiobahn +81 - 天天天国地獄国.mp3")
     audio_data = audio_data.astype(np.float64)
 
@@ -101,7 +101,7 @@ async def get_spectrum_visualizer():
 
 @app.get("/audio")
 async def get_audio():
-    return FileResponse("Aiobahn +81 - 天天天国地獄国.mp3", media_type="audio/mpeg")
+    return FileResponse("Aiobahn +81 - 天天天国地獄国.mp3")
 
 
 @app.websocket("/ws")
