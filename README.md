@@ -4,11 +4,7 @@
 
 > day_01: bmi-calculator
 
-> day_02: ...
-
 > day_03: password_generator
-
-> day_04: ...
 
 > day_05: basic_list_operations
 
@@ -20,15 +16,9 @@
 
 > day_09: word_counter
 
-> day_10: ...
-
 > day_11: crypto_price_alert
 
-> day_12: ...
-
 > day_13: qr_code_generator
-
-> day_14: ...
 
 > day_15: language_translator
 
@@ -36,6 +26,6 @@
 
 > day_17: weather_alert
 
-> day_18: ...
-
 > day_19: text_reverse
+
+> day_26: fourier_transform
