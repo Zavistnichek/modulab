@@ -1,7 +1,6 @@
-from fastapi import FastAPI, UploadFile, HTTPException, Request
+from fastapi import FastAPI, UploadFile, HTTPException, Request, File
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 import tempfile
 import io
 import os
@@ -13,10 +12,7 @@ import uvicorn
 
 app = FastAPI()
 
-# Монтируем статические файлы и шаблоны
-app.mount(
-    "/static", StaticFiles(directory="services/bpm_counter/static"), name="static"
-)
+
 templates = Jinja2Templates(directory="services/bpm_counter/templates")
 
 logger = logging.getLogger(__name__)
@@ -35,7 +31,7 @@ def convert_audio_to_wav(audio_data: bytes) -> bytes:
 
 def calculate_bpm(file_path: str) -> float:
     try:
-        win_s = 1024  # Уменьшено для лучшей чувствительности
+        win_s = 1024
         hop_s = 512
         samplerate = 44100
 
@@ -80,8 +76,13 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+upload_file = File(...)
+
+
 @app.post("/upload")
-async def upload_audio(file: UploadFile = None):
+async def upload_audio(
+    file: UploadFile = upload_file,
+):
     if not file:
         raise HTTPException(400, "No file uploaded")
 
