@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BPM Counter</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <h1>Upload Audio File</h1>
+    <input type="file" id="audioFile" accept="audio/*">
+    <div id="audio-container"></div>
+    <div>BPM: <span id="bpmDisplay">0</span></div>
+    <div>Beat count: <span id="counter">0</span></div>
+
+    <script>
+        let audioElement = null;
+        let bpm = 0;
+        let beatCount = 0;
+        let isPlaying = false;
+
+        function setupAudio(file) {
+            const audioUrl = URL.createObjectURL(file);
+
+            if (audioElement) {
+                audioElement.removeEventListener('play', handlePlay);
+                audioElement.removeEventListener('pause', handlePause);
+                audioElement.removeEventListener('seeked', handleSeek);
+            }
+
+            audioElement = new Audio();
+            audioElement.src = audioUrl;
+            audioElement.controls = true;
+            document.getElementById('audio-container').appendChild(audioElement);
+
+            audioElement.addEventListener('play', handlePlay);
+            audioElement.addEventListener('pause', handlePause);
+            audioElement.addEventListener('seeked', handleSeek);
+        }
+
+        function handlePlay() {
+            isPlaying = true;
+            updateCounter();
+        }
+
+        function handlePause() {
+            isPlaying = false;
+        }
+
+        function handleSeek() {
+            if (isPlaying) updateCounter();
+        }
+
+        function updateCounter() {
+            if (!isPlaying) return;
+
+            const currentTime = audioElement.currentTime;
+            const beatInterval = 60 / bpm;
+            const currentBeats = Math.floor(currentTime / beatInterval);
+
+            if (currentBeats !== beatCount) {
+                beatCount = currentBeats;
+                document.getElementById('counter').textContent = beatCount;
+            }
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        document.getElementById('audioFile').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                document.getElementById('bpmDisplay').textContent = '0';
+                document.getElementById('counter').textContent = '0';
+                bpm = 0;
+                beatCount = 0;
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                bpm = data.bpm;
+                document.getElementById('bpmDisplay').textContent = bpm;
+
+                setupAudio(file);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+
+</html>
