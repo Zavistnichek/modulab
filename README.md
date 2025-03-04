@@ -2,30 +2,32 @@
 
 ## 📌 Progress:
 
-> day_01: bmi-calculator
+> bmi-calculator
 
-> day_03: password_generator
+> password_generator
 
-> day_05: basic_list_operations
+> basic_list_operations
 
-> day_06: temperature_converter
+> temperature_converter
 
-> day_07: text_to_speech
+> text_to_speech
 
-> day_08: csv_tool
+> csv_tool
 
-> day_09: word_counter
+> word_counter
 
-> day_11: crypto_price_alert
+> crypto_price_alert
 
-> day_13: qr_code_generator
+> qr_code_generator
 
-> day_15: language_translator
+> language_translator
 
-> day_16: earthquake_alert
+> earthquake_alert
 
-> day_17: weather_alert
+> weather_alert
 
-> day_19: text_reverse
+> text_reverse
 
-> day_26: fourier_transform
+> fourier_transform
+
+> net_benchmark
