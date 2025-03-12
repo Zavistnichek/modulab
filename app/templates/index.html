@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar a.active {
+            background-color: #1abc9c;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ecf0f1;
+            overflow-y: auto;
+        }
+
+        .service-header {
+            margin-bottom: 20px;
+        }
+
+        .service-description {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Services</h2>
+        <a href="#" class="nav-link active" data-service="basic_list_operations">Basic List Operations</a>
+        <a href="#" class="nav-link" data-service="bmi_calculator">BMI Calculator</a>
+        <a href="#" class="nav-link" data-service="bpm_counter">BPM Counter</a>
+        <a href="#" class="nav-link" data-service="crypto_price_alert">Crypto Price Alert</a>
+        <a href="#" class="nav-link" data-service="csv_tool">CSV Tool</a>
+        <a href="#" class="nav-link" data-service="earthquake_alert">Earthquake Alert</a>
+        <a href="#" class="nav-link" data-service="fourier_transform">Fourier Transform</a>
+        <a href="#" class="nav-link" data-service="language_translator">Language Translator</a>
+        <a href="#" class="nav-link" data-service="net_benchmark">Net Benchmark</a>
+        <a href="#" class="nav-link" data-service="password_generator">Password Generator</a>
+        <a href="#" class="nav-link" data-service="qr_code_generator">QR Code Generator</a>
+        <a href="#" class="nav-link" data-service="temperature_converter">Temperature Converter</a>
+        <a href="#" class="nav-link" data-service="text_reverse">Text Reverse</a>
+        <a href="#" class="nav-link" data-service="text_to_speech">Text to Speech</a>
+        <a href="#" class="nav-link" data-service="weather_alert">Weather Alert</a>
+        <a href="#" class="nav-link" data-service="word_counter">Word Counter</a>
+    </div>
+    <div class="content">
+        <div id="basic_list_operations" class="service active">
+            <div class="service-header">
+                <h1>Basic List Operations</h1>
+            </div>
+            <div class="service-description">
+                <p>This service provides basic operations on lists such as sorting, filtering, and aggregation.</p>
+            </div>
+        </div>
+        <div id="bmi_calculator" class="service">
+            <div class="service-header">
+                <h1>BMI Calculator</h1>
+            </div>
+            <div class="service-description">
+                <p>Calculate your Body Mass Index (BMI) using this simple tool.</p>
+            </div>
+        </div>
+        <div id="bpm_counter" class="service">
+            <div class="service-header">
+                <h1>BPM Counter</h1>
+            </div>
+            <div class="service-description">
+                <p>A tool to count beats per minute (BPM) for music or other rhythmic applications.</p>
+            </div>
+        </div>
+        <div id="crypto_price_alert" class="service">
+            <div class="service-header">
+                <h1>Crypto Price Alert</h1>
+            </div>
+            <div class="service-description">
+                <p>Set alerts for cryptocurrency price changes and stay updated with the market.</p>
+            </div>
+        </div>
+        <div id="csv_tool" class="service">
+            <div class="service-header">
+                <h1>CSV Tool</h1>
+            </div>
+            <div class="service-description">
+                <p>A utility to manipulate and process CSV files efficiently.</p>
+            </div>
+        </div>
+        <div id="earthquake_alert" class="service">
+            <div class="service-header">
+                <h1>Earthquake Alert</h1>
+            </div>
+            <div class="service-description">
+                <p>Get real-time alerts about earthquakes happening around the world.</p>
+            </div>
+        </div>
+        <div id="fourier_transform" class="service">
+            <div class="service-header">
+                <h1>Fourier Transform</h1>
+            </div>
+            <div class="service-description">
+                <p>Analyze audio signals using Fourier Transform techniques.</p>
+            </div>
+        </div>
+        <div id="language_translator" class="service">
+            <div class="service-header">
+                <h1>Language Translator</h1>
+            </div>
+            <div class="service-description">
+                <p>Translate text between multiple languages with ease.</p>
+            </div>
+        </div>
+        <div id="net_benchmark" class="service">
+            <div class="service-header">
+                <h1>Net Benchmark</h1>
+            </div>
+            <div class="service-description">
+                <p>Measure network performance metrics like latency, bandwidth, and jitter.</p>
+            </div>
+        </div>
+        <div id="password_generator" class="service">
+            <div class="service-header">
+                <h1>Password Generator</h1>
+            </div>
+            <div class="service-description">
+                <p>Generate strong and secure passwords for your accounts.</p>
+            </div>
+        </div>
+        <div id="qr_code_generator" class="service">
+            <div class="service-header">
+                <h1>QR Code Generator</h1>
+            </div>
+            <div class="service-description">
+                <p>Create QR codes for URLs, text, or other data types.</p>
+            </div>
+        </div>
+        <div id="temperature_converter" class="service">
+            <div class="service-header">
+                <h1>Temperature Converter</h1>
+            </div>
+            <div class="service-description">
+                <p>Convert temperatures between Celsius, Fahrenheit, and Kelvin.</p>
+            </div>
+        </div>
+        <div id="text_reverse" class="service">
+            <div class="service-header">
+                <h1>Text Reverse</h1>
+            </div>
+            <div class="service-description">
+                <p>Reverse any text input instantly.</p>
+            </div>
+        </div>
+        <div id="text_to_speech" class="service">
+            <div class="service-header">
+                <h1>Text to Speech</h1>
+            </div>
+            <div class="service-description">
+                <p>Convert written text into spoken words.</p>
+            </div>
+        </div>
+        <div id="weather_alert" class="service">
+            <div class="service-header">
+                <h1>Weather Alert</h1>
+            </div>
+            <div class="service-description">
+                <p>Receive weather updates and alerts for specific locations.</p>
+            </div>
+        </div>
+        <div id="word_counter" class="service">
+            <div class="service-header">
+                <h1>Word Counter</h1>
+            </div>
+            <div class="service-description">
+                <p>Count the number of words in a given text.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const serviceId = this.getAttribute('data-service');
+                document.querySelectorAll('.nav-link').forEach(navLink => navLink.classList.remove('active'));
+                document.querySelectorAll('.service').forEach(service => service.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(serviceId).classList.add('active');
+                if (serviceId === 'basic_list_operations') {
+                    fetch('/api/basic-list-operations', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            document.querySelector(`#${serviceId} .service-description`).innerHTML =
+                                `<p>Result: ${JSON.stringify(data.result)}</p>`;
+                        });
+                } else if (serviceId === 'bmi_calculator') {
+                    const height = prompt("Enter height in meters:");
+                    const weight = prompt("Enter weight in kilograms:");
+                    fetch('/api/bmi-calculator', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ height: parseFloat(height), weight: parseFloat(weight) })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            document.querySelector(`#${serviceId} .service-description`).innerHTML =
+                                `<p>Your BMI is: ${data.result}</p>`;
+                        });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

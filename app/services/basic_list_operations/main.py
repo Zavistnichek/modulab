@@ -3,6 +3,7 @@ import uvicorn
 import os
 import logging
 import json
+import requests
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -12,6 +13,28 @@ app = FastAPI()
 data_list: list[str] = []
 
 MAX_LIST_SIZE = 100
+
+BASE_URL = "http://localhost:5000"
+
+
+def basic_list_operations_service(operation: str, item: str = None):
+    try:
+        if operation == "add" and item:
+            response = requests.post(f"{BASE_URL}/add", params={"item": item})
+        elif operation == "remove" and item:
+            response = requests.delete(f"{BASE_URL}/remove", params={"item": item})
+        elif operation == "search" and item:
+            response = requests.get(f"{BASE_URL}/search", params={"item": item})
+        elif operation == "sort":
+            response = requests.get(f"{BASE_URL}/sort")
+        elif operation == "length":
+            response = requests.get(f"{BASE_URL}/length")
+        else:
+            return {"error": "Invalid operation or missing item"}
+
+        return response.json()
+    except requests.RequestException as e:
+        return {"error": str(e)}
 
 
 @app.post("/add")
